@@ -3,18 +3,10 @@ var Sprite = function(spec) {
 
   this.x = spec.position.x;
   this.y = spec.position.y;
+  this.width = spec.width || spec.img.width;
+  this.height = spec.height || spec.img.height;
+  this.img = spec.img;
   this.scale = spec.scale || 1;
-  this.img = new Image();
-  this.img.addEventListener('load', function() {
-      self.width = this.width * self.scale;
-      self.height = this.height * self.scale;
-  });
-
-  if(spec.onload) {
-    this.img.addEventListener('load', onload);
-  }
-
-  this.img.src = spec.url;
 };
 
 Sprite.prototype.render = function(context) {

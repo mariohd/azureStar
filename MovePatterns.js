@@ -1,22 +1,22 @@
 var MovePatterns = function() {
   this.straightAhead = function(boundaries) {
-    this.y += this.speed;
+    this.x -= this.speed;
   };
 
-  this.leftToRight = function(boundaries) {
-    this.y += Math.floor(this.speed/8);
+  this.upAndDown = function(boundaries) {
+    this.x -= this.speed;
 
-    if(typeof this.goToLeft == 'undefined') {
-      this.goToLeft = Math.random().toFixed() == 0;
+    if(typeof this.goUp == 'undefined') {
+      this.goUp = Math.random().toFixed() == 0;
     }
 
-    if (this.goToLeft) {
-      this.x -= this.speed;
-      this.goToLeft = (this.x >= 0);
+    if (this.goUp) {
+      this.y -= this.speed;
+      this.goUp = (this.y >= 0);
     }
     else {
-      this.x += this.speed;
-      this.goToLeft = (this.x + this.width >= boundaries.width);
+      this.y += this.speed;
+      this.goUp = (this.y + this.height >= boundaries.height);
     }
   };
 
@@ -56,7 +56,7 @@ var MovePatterns = function() {
   }
 
   this.select = function() {
-    var patterns = [this.stairs, this.leftToRight, this.straightAhead];
+    var patterns = [this.stairs, this.upAndDown, this.straightAhead];
     return patterns[randomInt(0, patterns.length)];
   }
 

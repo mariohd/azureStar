@@ -1,9 +1,12 @@
 var Bullet = extend(Sprite, function(point) {
-  var didHit = false;
+  var didHit = false,
+      self = this;
 
-  Sprite.call(this, {
-    url: 'images/ship/bullet.png',
-    position: point
+  Cache.getImage('ship/bullet.png', function(image) {
+    Sprite.call(self, {
+      img: image,
+      position: point
+    });
   });
 
   this.damage = 5;
@@ -17,5 +20,5 @@ var Bullet = extend(Sprite, function(point) {
 });
 
 Bullet.prototype.move = function(step) {
-  this.y += step;
+  this.x -= step;
 }

@@ -1,22 +1,28 @@
 var SpaceShip = extend(Sprite, function(boundaries) {
-  Sprite.call(this, {
-    url: 'images/ship/ship.png',
-    position: {
-      x: boundaries.width/2,
-      y: boundaries.height - 100
-    },
-    scale: 0.4
-  });
+  var self = this;
+  this.ready = false;
+  this.bullets = [];
   this.boundaries = boundaries;
   this.speed = 5;
-  this.bullets = [];
-  this.initiateShooter();
+
+  this.limitShooting();
   this.shotControl = true;
   this.lives = 3;
   this.score = 0;
+
+  Cache.getImage('ship/ship.png', function(image) {
+    Sprite.call(self, {
+      img: image,
+      position: {
+        x: boundaries.width/2,
+        y: boundaries.height - 100
+      }
+    });
+    self.ready = true;
+  });
 });
 
-SpaceShip.prototype.initiateShooter = function() {
+SpaceShip.prototype.limitShooting = function() {
   var self = this;
   setInterval(function () {
     self.shootControl = true;
@@ -48,10 +54,12 @@ SpaceShip.prototype.hit = function() {
 };
 
 SpaceShip.prototype.render = function(context) {
-  this.parent.render.call(this, context);
-  this.bullets.forEach(function(bullet){
-    bullet.render(context);
-  });
+  if(this.ready) {
+    this.parent.render.call(this, context);
+    this.bullets.forEach(function(bullet){
+      bullet.render(context);
+    });
+  }
 };
 
 SpaceShip.prototype.moveLeft = function() {
@@ -81,8 +89,8 @@ SpaceShip.prototype.moveDown = function() {
 SpaceShip.prototype.shoot = function() {
   if(this.shootControl) {
     this.bullets.push(new Bullet({
-      x: this.x + (this.width / 2),
-      y: this.y
+      x: this.x + (this.width) - 15,
+      y: this.y + (this.height / 2) - 5
     }));
     this.shootControl = false;
   }

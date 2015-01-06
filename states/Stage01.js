@@ -11,62 +11,73 @@ var Stage01 = extend(Stage, function(game) {
     this,
     'images/stages/witchBroomNebula.jpg',
     'Witch Broom Nebula',
-    boundaries.height,
+    boundaries.width,
     0.6
   );
 
   function deployEnemies(enemyFactory) {
-    return function(amount) {
+    return function(amount, interval) {
+      interval = interval || 300;
       var handler = setInterval(function() {
         if(amount == 0) {
           clearInterval(handler);
         }
         enemies.push(enemyFactory());
         amount--;
-      }, 300)
+      }, interval)
     };
   }
-  // window.setTimeout(function(){
-  //   enemyInterval = setInterval(function () {
-  //       enemies.push(new Enemy(boundaries, {
-  //         image: 'images/enemies/enemy01.png',
-  //         speed: 3,
-  //         movePattern: movePatterns.select()
-  //       }));
-  //     }, 500);
-  // }, 2000);
 
-  this.stairsWave = deployEnemies(function() {
-    return new Enemy(boundaries, {
-            image: 'images/enemies/enemy01.png',
-            speed: 4,
-            movePattern: movePatterns.stairs
-           });
-    });
+  Cache.getImage('enemies/enemyBlack5.png', function(image) {
+    deployEnemies(function() {
+      return new Enemy(boundaries, {
+               image: image,
+               speed: 3,
+               movePattern: movePatterns.select(),
+               position: { x: boundaries.width, y: (boundaries.height + image.height)/ 2 }
+             });
+    })(50, 500);
+  });
 
-  this.circleWave = deployEnemies(function() {
-    return new Enemy(boundaries, {
-             image: 'images/enemies/enemy01.png',
-             speed: 5,
-             movePattern: movePatterns.circle
-           });
+  Cache.getImage('enemies/enemyBlack1.png', function(image) {
+    self.stairsWave = deployEnemies(function() {
+      return new Enemy(boundaries, {
+        image: image,
+        speed: 4,
+        movePattern: movePatterns.stairs
+      });
     });
-  this.bouncingCircleWave = deployEnemies(function(){
-    return new Enemy(boundaries, {
-      image: 'images/enemies/enemy01.png',
-      speed: 5,
-      movePattern: movePatterns.bouncingCircle,
-      position: {
-        x: boundaries.width,
-        y: 30
-      }
+    // window.setTimeout(self.stairsWave, 10000, 20);
+    // window.setTimeout(self.stairsWave, 30000, 20);
+  });
+
+  Cache.getImage('enemies/enemyBlack4.png', function(image) {
+    self.circleWave = deployEnemies(function() {
+      return new Enemy(boundaries, {
+        image: image,
+        speed: 5,
+        movePattern: movePatterns.circle
+      });
     });
+    // window.setTimeout(self.circleWave, 5000, 20);
+  });
+
+  Cache.getImage('enemies/enemyBlack5.png', function(image) {
+    self.bouncingCircleWave = deployEnemies(function(){
+      return new Enemy(boundaries, {
+        image: image,
+        speed: 5,
+        movePattern: movePatterns.bouncingCircle,
+        position: {
+          x: boundaries.width,
+          y: 30
+        }
+      });
+    });
+    // window.setTimeout(self.bouncingCircleWave, 2000, 20);
   });
 
   window.stage = this;
-  window.setTimeout(self.stairsWave, 10000, 20);
-  window.setTimeout(self.circleWave, 1000, 20);
-  window.setTimeout(self.stairsWave, 50000, 20);
 
   this.update = function() {
     this.parent.update.call(this);

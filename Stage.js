@@ -9,22 +9,30 @@ var Stage = function(imageURL, name, exibitionArea, speed) {
 
   this.background.addEventListener('load', function () {
     self.isReady = true;
-    self.currentHeight = self.background.height - self.exibitionArea;
-    self.ratio = self.background.height/self.background.width;
-    self.width = self.background.width * self.ratio;
+    self.currentWidth = this.height - self.exibitionArea;
+    self.ratio = this.height/this.width;
   });
   this.background.src = imageURL;
 
   this.showName = function (context) {
-    context.fillStyle = "#D30035";
-    context.font = '40px Guardians';
-    context.textAlign = 'center';
-    context.fillText(name, context.canvas.width / 2, context.canvas.height/ 5);
+    var canvas = document.createElement('canvas'),
+        context2 = canvas.getContext('2d');
+    canvas.width = context.canvas.width;
+    canvas.height = context.canvas.height;
+
+
+    context2.fillStyle = "#D30035";
+    context2.font = '40px Guardians';
+    context2.textAlign = 'center';
+    context2.fillText(name, canvas.width / 2, canvas.height/ 5);
+    context.drawImage(canvas, 0, 0);
+    canvas = null;
+    context2 = null;
   };
 };
 Stage.prototype.update = function() {
-  if (this.currentHeight >= this.speed) {
-    this.currentHeight -= this.speed;
+  if (this.currentWidth >= this.speed) {
+    this.currentWidth -= this.speed;
   }
 };
 
@@ -33,12 +41,12 @@ Stage.prototype.render = function(context) {
     context.drawImage(
       this.background,
       0,
-      -this.currentHeight,
-      this.width,
-      this.background.height
+      0,
+      context.canvas.width,
+      context.canvas.width * this.ratio
     );
 
-    if ((this.background.height - this.exibitionArea - this.currentHeight) < 120 ) {
+    if ((this.background.width - this.exibitionArea - this.currentWidth) < 120 ) {
       this.showName(context);
     }
   }

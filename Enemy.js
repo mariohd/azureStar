@@ -1,8 +1,7 @@
 var Enemy = extend(Sprite, function(boundaries, spec) {
   Sprite.call(this, {
-    url: spec.image,
-    position: spec.position || { x: boundaries.width / 2, y: 10 },
-    scale: 0.2
+    img: spec.image,
+    position: spec.position || { x: boundaries.width / 2, y: 10 }
   });
   this.isHit = false;
   this.boundaries = boundaries;
