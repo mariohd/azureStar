@@ -1,5 +1,6 @@
 var Input = function() {
-  var keys = {},
+  var self = this,
+      keys = {},
       aliases = {
         'space': 32,
         'backspace': 8,
@@ -104,10 +105,16 @@ var Input = function() {
 
   this.keydown = function (event) {
     keys[event.which] = true;
+    if(self.pressed('left_arrow', 'up_arrow', 'right_arrow', 'down_arrow')) {
+      event.preventDefault();
+    }
   };
 
   this.keyup = function (event) {
     keys[event.which] = false;
+    if(self.pressed('left_arrow', 'up_arrow', 'right_arrow', 'down_arrow')) {
+      event.preventDefault();
+    }
   };
 
   this.pressed = function() {
