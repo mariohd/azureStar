@@ -6,7 +6,7 @@ var azureStar = ({
     };
   },
   input: new Input(),
-
+  paused: false,
   init: function () {
     function createGameCanvas(game, inputHandler) {
       var canvas = document.getElementById('game-canvas');
@@ -49,21 +49,17 @@ var azureStar = ({
       if(self.state.isComplete()) {
         self.state = self.state.nextStage();
       }
-      self.state.readInput(self.input);
-      self.state.update();
+      if(self.input.pressed('escape')) {
+        self.paused = !self.paused;
+      }
+      if(!self.paused) {
+        self.state.readInput(self.input);
+        self.state.update();
 
-      self.context.clearRect(0 ,0, self.context.canvas.width, self.context.canvas.height);
-      self.state.render(self.context);
+        self.context.clearRect(0 ,0, self.context.canvas.width, self.context.canvas.height);
+        self.state.render(self.context);
+      }
       requestAnimationFrame(gameLoop);
     })();
-  },
-
-  gameOver: function(context) {
-      context.save();
-      context.fillStyle = "#D30035";
-      context.font = '70px Guardians';
-      context.textAlign = 'center';
-      context.fillText("Game Over", this.boundaries.width / 2 , this.boundaries.height / 2);
-      context.restore();
-  },
+  }
 }).init();
