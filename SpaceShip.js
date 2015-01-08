@@ -9,7 +9,8 @@ var SpaceShip = extend(Sprite, function(boundaries) {
   this.shotControl = true;
   this.lives = 3;
   this.score = 0;
-
+  this.damage = -1;
+  this.damages = [];
   Cache.getImage('ship/ship.png', function(image) {
     Sprite.call(self, {
       img: image,
@@ -19,6 +20,16 @@ var SpaceShip = extend(Sprite, function(boundaries) {
       }
     });
     self.ready = true;
+    var damage1 = new Image();
+    damage1.src = 'images/ship/damage/1.png';
+    var damage2 = new Image();
+    damage2.src = 'images/ship/damage/2.png';
+    var damage3 = new Image();
+    damage3.src = 'images/ship/damage/3.png';
+    self.damages.push(damage1);
+    self.damages.push(damage2);
+    self.damages.push(damage3);
+
   });
 });
 
@@ -50,7 +61,11 @@ SpaceShip.prototype.update = function(enemies) {
 };
 
 SpaceShip.prototype.hit = function() {
-  // console.log('hit!');
+  this.damage ++;
+  if (this.damage >= this.damages.length) {
+    this.damage = -1;
+    this.lives --;
+  }
 };
 
 SpaceShip.prototype.render = function(context) {
@@ -59,6 +74,9 @@ SpaceShip.prototype.render = function(context) {
     this.bullets.forEach(function(bullet){
       bullet.render(context);
     });
+    if (this.damage > -1) {
+      context.drawImage(this.damages[this.damage], this.x, this.y, this.width, this.height);
+    }
   }
 };
 
