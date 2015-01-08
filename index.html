@@ -13,24 +13,34 @@
 
       canvas {
         display: inline;
-        background-color: white;
+        background-color: transparent;
         outline: 0;
       }
 
       #canvas-container {
         width: 100%;
-        text-align:center;
+        height:100%;
+      }
+
+      #foreground {
+        position: absolute;
+        z-index: 1;
+      }
+      #background {
+        position: absolute;
+        z-index: 0;
       }
     </style>
   </head>
   <body>
     <div id="canvas-container">
-      <canvas id="game-canvas" tabindex="1">
+      <canvas id="background" tabindex="-1">
         Your browser does not support the HTML5 canvas tag.
       </canvas>
+      <canvas id="foreground" tabindex="1"></canvas>
     </div>
     <script src="commons.js"></script>
-    <<script src="Cache.js"></script>
+    <script src="Cache.js"></script>
     <script src="Sprite.js"></script>
     <script src="ClockCounter.js"></script>
     <script src="SpaceShip.js"></script>

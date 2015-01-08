@@ -9,10 +9,10 @@ var Stage01 = extend(Stage, function(game) {
 
   Stage.call(
     this,
-    'images/stages/witchBroomNebula.jpg',
+    'images/stages/NGC6960.jpg',
     'Witch Broom Nebula',
     boundaries.width,
-    0.6
+    1
   );
 
   function deployEnemies(enemyFactory) {
@@ -93,11 +93,11 @@ var Stage01 = extend(Stage, function(game) {
     ship.update(enemies);
   };
 
-  this.render = function(context) {
-    this.parent.render.call(this, context);
-    ship.render(context);
+  this.render = function(foreground, background) {
+    this.parent.render.call(this, foreground, background);
+    ship.render(foreground);
     enemies.forEach(function(enemy) {
-      enemy.render(context);
+      enemy.render(foreground);
     });
   };
 

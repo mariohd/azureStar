@@ -1,16 +1,15 @@
 var Stage = function(imageURL, name, exibitionArea, speed) {
   var self = this;
-
+  this.iteration = 0;
   this.isReady = false;
   this.currentHeight = 0;
   this.exibitionArea = exibitionArea;
   this.speed = speed;
   this.background = new Image();
-
+  this.currentWidth = 0;
   this.background.addEventListener('load', function () {
     self.isReady = true;
-    self.currentWidth = this.height - self.exibitionArea;
-    self.ratio = this.height/this.width;
+    self.ratio = (16 * this.height)/this.width;
   });
   this.background.src = imageURL;
 
@@ -31,23 +30,28 @@ var Stage = function(imageURL, name, exibitionArea, speed) {
   };
 };
 Stage.prototype.update = function() {
-  if (this.currentWidth >= this.speed) {
-    this.currentWidth -= this.speed;
+  if (this.currentWidth <= this.background.width/2 ) {
+    this.currentWidth += this.speed;
   }
 };
 
-Stage.prototype.render = function(context) {
-  if (this.isReady) {
-    context.drawImage(
+Stage.prototype.render = function(foreground, background) {
+  if (this.isReady ) {
+    background.drawImage(
       this.background,
+      this.currentWidth,
+      0,
+      this.background.width/16,
+      this.background.height,
       0,
       0,
-      context.canvas.width,
-      context.canvas.width * this.ratio
+      background.canvas.width,
+      background.canvas.width * this.ratio
     );
 
-    if ((this.background.width - this.exibitionArea - this.currentWidth) < 120 ) {
-      this.showName(context);
+    if (this.currentWidth < 120 ) {
+      this.showName(foreground);
     }
   }
+
 };

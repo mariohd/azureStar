@@ -9,26 +9,33 @@ var azureStar = ({
   paused: false,
   init: function () {
     function createGameCanvas(game, inputHandler) {
-      var canvas = document.getElementById('game-canvas');
+      var foreground = document.getElementById('foreground'),
+          background = document.getElementById('background');
 
-      canvas.addEventListener('blur', canvas.focus);
-      canvas.addEventListener('keydown', inputHandler.keydown);
-      canvas.addEventListener('keyup', inputHandler.keyup);
-      canvas.focus();
+      foreground.addEventListener('blur', foreground.focus);
+      foreground.addEventListener('keydown', inputHandler.keydown);
+      foreground.addEventListener('keyup', inputHandler.keyup);
+      foreground.focus();
 
       window.addEventListener('after-resize', function() {
         var boundaries = game.boundaries();
-        canvas.width = boundaries.width;
-        canvas.height = boundaries.height;
+        foreground.width = boundaries.width;
+        foreground.height = boundaries.height;
+        background.width = boundaries.width;
+        background.height = boundaries.height;
         game.state.resize(boundaries);
       });
-      return canvas;
+      return {
+        foreground: foreground,
+        background: background
+      };
     }
 
     var self = this,
         canvas = createGameCanvas(this, this.input);
 
-    this.context = canvas.getContext("2d");
+    this.foreground = canvas.foreground.getContext('2d');
+    this.background = canvas.background.getContext('2d');
     this.state = new LoadingState(this);
     this.loop();
 
@@ -56,8 +63,8 @@ var azureStar = ({
         self.state.readInput(self.input);
         self.state.update();
 
-        self.context.clearRect(0 ,0, self.context.canvas.width, self.context.canvas.height);
-        self.state.render(self.context);
+        self.foreground.clearRect(0 ,0, self.foreground.canvas.width, self.foreground.canvas.height);
+        self.state.render(self.foreground, self.background);
       }
       requestAnimationFrame(gameLoop);
     })();
